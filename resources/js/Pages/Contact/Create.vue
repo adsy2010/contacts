@@ -1,13 +1,17 @@
 <script setup>
+import Form from "./Partials/Form/Form";
+
 let emit = defineEmits([]);
 let props = defineProps({});
 
 </script>
 
 <template>
-    <div>Create contact</div>
-    <!--    <div></div>-->
-    <div>
-        Form here
+    <div class="mx-auto lg:max-w-7xl">
+
+        <div class="py-6">
+            <Form personal-information/>
+        </div>
+
     </div>
 </template>
