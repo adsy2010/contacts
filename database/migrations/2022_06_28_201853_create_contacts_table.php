@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->date('date_of_birth');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email')->nullable();
+            $table->date('date_of_birth')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
