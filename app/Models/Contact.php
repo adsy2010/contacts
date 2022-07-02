@@ -13,7 +13,16 @@ class Contact extends Model
 
     protected $guarded = ['id'];
 
-    protected $fillable = ['name', 'date_of_birth'];
+    protected $fillable = ['first_name', 'last_name', 'email', 'date_of_birth'];
+
+    protected $casts = [
+        'date_of_birth' => 'date'
+    ];
+
+    protected $appends = [
+        'date_of_birth_form',
+        'date_of_birth_long'
+    ];
 
     /**
      * Related phone numbers
@@ -33,5 +42,26 @@ class Contact extends Model
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateOfBirthFormAttribute(): mixed
+    {
+        if(!empty($this->date_of_birth)) {
+            return $this->date_of_birth->format('Y-m-d');
+        } else {
+            return '';
+        }
+    }
+
+    public function getDateOfBirthLongAttribute()
+    {
+        if(!empty($this->date_of_birth)) {
+            return $this->date_of_birth->format('jS M, Y');
+        } else {
+            return '';
+        }
     }
 }
