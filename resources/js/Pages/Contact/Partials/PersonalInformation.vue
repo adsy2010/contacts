@@ -1,9 +1,25 @@
 <script setup>
-import { PaperClipIcon, CogIcon } from '@heroicons/vue/solid'
+import {CogIcon, HomeIcon, PhoneIcon} from '@heroicons/vue/solid'
+import DetailItem from "./DetailItem";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 let props = defineProps({
     contact: Object,
 })
+
+let deleteAddress = (address) => {
+    let form = useForm({});
+    form.delete(`/contact/${props.contact.id}/address/${address.id}`, {
+
+    });
+}
+
+let deletePhoneNumber = (number) => {
+    let form = useForm({});
+    form.delete(`/contact/${props.contact.id}/phoneNumber/${number.id}`, {
+
+    });
+}
 </script>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
@@ -22,55 +38,75 @@ let props = defineProps({
         </div>
         <div class="border-t border-gray-200">
             <dl>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Full name</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ contact.first_name }} {{ contact.last_name }}</dd>
-                </div>
-<!--                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">-->
-<!--                    <dt class="text-sm font-medium text-gray-500">Application for</dt>-->
-<!--                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">Backend Developer</dd>-->
-<!--                </div>-->
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Email address</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{contact.email}}</dd>
-                </div>
-                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">Date of Birth</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{contact.date_of_birth_long}}</dd>
-                </div>
-<!--                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">-->
-<!--                    <dt class="text-sm font-medium text-gray-500">Salary expectation</dt>-->
-<!--                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">$120,000</dd>-->
-<!--                </div>-->
-<!--                <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">-->
-<!--                    <dt class="text-sm font-medium text-gray-500">About</dt>-->
-<!--                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. Sit id mollit nulla mollit nostrud in ea officia proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit deserunt qui eu.</dd>-->
-<!--                </div>-->
-<!--                <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">-->
-<!--                    <dt class="text-sm font-medium text-gray-500">Attachments</dt>-->
-<!--                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">-->
-<!--                        <ul role="list" class="border border-gray-200 rounded-md divide-y divide-gray-200">-->
-<!--                            <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">-->
-<!--                                <div class="w-0 flex-1 flex items-center">-->
-<!--                                    <PaperClipIcon class="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />-->
-<!--                                    <span class="ml-2 flex-1 w-0 truncate"> resume_back_end_developer.pdf </span>-->
-<!--                                </div>-->
-<!--                                <div class="ml-4 flex-shrink-0">-->
-<!--                                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> Download </a>-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                            <li class="pl-3 pr-4 py-3 flex items-center justify-between text-sm">-->
-<!--                                <div class="w-0 flex-1 flex items-center">-->
-<!--                                    <PaperClipIcon class="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />-->
-<!--                                    <span class="ml-2 flex-1 w-0 truncate"> coverletter_back_end_developer.pdf </span>-->
-<!--                                </div>-->
-<!--                                <div class="ml-4 flex-shrink-0">-->
-<!--                                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> Download </a>-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </dd>-->
-<!--                </div>-->
+
+                <DetailItem title="Full name">{{ contact.first_name }} {{ contact.last_name }}</DetailItem>
+                <DetailItem title="Email address">{{ contact.email }}</DetailItem>
+                <DetailItem title="Date of Birth">{{ contact.date_of_birth_long }}</DetailItem>
+
+                <DetailItem title="Phone Numbers">
+                    <ul role="list" class="divide-y divide-gray-200" v-if="contact.phone_numbers.length > 0">
+
+
+                        <li class="py-3 flex items-center justify-between text-sm" v-for="phoneNumber in contact.phone_numbers">
+                            <div class="w-0 flex-1 flex items-center">
+                                <PhoneIcon class="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                <span class="ml-2 flex-1 w-0 truncate"> {{phoneNumber.number}} </span>
+                            </div>
+                            <div class="ml-4 flex-shrink-0 space-x-2">
+                                <Link
+                                    :href="`/contact/${contact.id}/phoneNumber/${phoneNumber.id}/edit`"
+                                    class="font-medium text-indigo-600 hover:text-indigo-500"
+                                > Edit </Link>
+                                <button
+                                    @click="deletePhoneNumber(phoneNumber)"
+                                    class="font-medium rounded-md text-red-600 hover:text-red-800"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+
+
+
+                    </ul>
+                    <div class="divide-y divide-gray-200">
+                        <Link class="text-indigo-400 underline hover:text-indigo-700" :href="`/contact/${contact.id}/phoneNumber/create`">
+                            Add a phone number
+                        </Link>
+                    </div>
+                </DetailItem>
+                <DetailItem title="Addresses">
+                    <ul role="list" class="divide-y divide-gray-200" v-if="contact.addresses.length > 0">
+
+
+                        <li class="py-3 flex items-center justify-between text-sm" v-for="address in contact.addresses">
+                            <div class="w-0 flex-1 flex items-center">
+                                <HomeIcon class="flex-shrink-0 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                <span class="ml-2 flex-1 w-0 truncate"> {{address.address_1}}, {{address.city}} </span>
+                            </div>
+                            <div class="ml-4 flex-shrink-0 space-x-2">
+                                <Link
+                                    :href="`/contact/${contact.id}/address/${address.id}/edit`"
+                                    class="font-medium text-indigo-600 hover:text-indigo-500"
+                                > Edit </Link>
+                                <button
+                                    @click="deleteAddress(address)"
+                                    class="font-medium rounded-md text-red-600 hover:text-red-800"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+
+
+
+                    </ul>
+                    <div class="divide-y divide-gray-200">
+                        <Link class="text-indigo-400 underline hover:text-indigo-700" :href="`/contact/${contact.id}/address/create`">
+                            Add an address
+                        </Link>
+                    </div>
+                </DetailItem>
             </dl>
         </div>
     </div>
