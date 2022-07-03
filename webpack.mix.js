@@ -19,7 +19,8 @@ mix.js("resources/js/app.js", "public/js")
     })
     .extract()
     .postCss("resources/css/app.css", "public/css", [require("tailwindcss")])
-    .version();
+    .version()
+    .disableSuccessNotifications();
 
 
 
