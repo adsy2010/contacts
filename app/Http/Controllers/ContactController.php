@@ -20,6 +20,8 @@ class ContactController extends Controller
     {
         $contacts = Contact::query()
             ->withCount(['addresses', 'phoneNumbers'])
+            ->orderBy('first_name', 'asc')
+            ->orderBy('last_name', 'asc')
             ->paginate();
 
 
@@ -130,6 +132,6 @@ class ContactController extends Controller
     {
         $contact->delete();
 
-        return back();
+        return redirect()->to(route('contact.index'));
     }
 }
