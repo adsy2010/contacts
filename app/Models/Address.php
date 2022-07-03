@@ -11,6 +11,21 @@ class Address extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $guarded = ['id'];
+
+    protected $fillable = [
+        'contact_id',
+        'label',
+        'address_1',
+        'address_2',
+        'address_3',
+        'city',
+        'county',
+        'country',
+        'postcode',
+    ];
+
+
     /**
      * @return BelongsTo
      */

@@ -11,6 +11,14 @@ class PhoneNumber extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $guarded = ['id'];
+
+    protected $fillable = [
+        'contact_id',
+        'label',
+        'number'
+    ];
+
     /**
      * @return BelongsTo
      */
